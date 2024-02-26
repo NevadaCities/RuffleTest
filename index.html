@@ -6,40 +6,113 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Flash小游戏">
-        <style>
+        <style type="text/css">
             body {
-                position: relative;
-                width: 100%;
-                height: 100vh;
-                margin: 0;
-            }
-            .inside {
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                width: 400px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                height: 100vh;
+                margin: 1em;
+                overflow: hidden;
             }
-            .external {
-                display: flex;
+            .nav {
+                height: 25px;
             }
-            .external > * {
-                margin: 2px;
+            .player {
+                position: relative;
+                width: 100%;
+                height: calc(100vh - 25px - 2em);
             }
+            .ruffle-player-location {
+                position: absolute;
+                display: block;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .ruffle-player-location > * {
+	  	        width: 100%;
+		        height: 100%
+	        }
         </style>
+        <script>
+            const userAgent = window.navigator.userAgent;
+            const allowedKeywords = ["Windows NT", "Macintosh", "X11", "Wayland"];
+            const isAllowedAccess = allowedKeywords.some(keyword => userAgent.includes(keyword));
+            if (!isAllowedAccess) {
+                alert("抱歉，您的设备可能无法提供最佳的游戏体验。");
+            }
+        </script>
     </head>
     <body>
-        <div class="inside">
-            <p style="font-size:2em;margin:0;">Flash小游戏</p>
-            <div class="external">
-            <a href="EarthTaken.html">拯救地球系列</a>
-            <a href="Rebuild.html">重建城镇系列</a>
-            <a href="Zombotron.html">勇闯僵尸洞穴系列</a>
-            <a href="Other.html">其他游戏</a>
-            </div>
+        <div class="nav">
+            <label for="fileSelect">选择游戏:</label>
+            <select id="fileSelect"></select>
+            <button id="loadButton">加载游戏</button>
         </div>
+        <div class="player">
+            <div class="ruffle-player-location" id="player"></div>
+        </div>
+        <script>
+            window.RufflePlayer = window.RufflePlayer || {};
+            window.addEventListener("load", (event) => {
+                const ruffle = window.RufflePlayer.newest();
+                const player = ruffle.createPlayer();
+                const container = document.getElementById("player");
+                container.appendChild(player);
+
+                const swfFiles = [
+                    "res/swf/独自一人：僵尸丛林.swf",
+                    "res/swf/拯救地球.swf",
+                    "res/swf/拯救地球2.swf",
+                    "res/swf/拯救地球3.swf",
+                    "res/swf/重建城镇.swf",
+                    "res/swf/重建城镇2.swf",
+                    "res/swf/勇闯僵尸洞穴.swf",
+                    "res/swf/勇闯僵尸洞穴2.swf",
+                    "res/swf/勇闯僵尸洞穴2时间机器.swf"
+                ];
+
+                const fileSelect = document.getElementById("fileSelect");
+                swfFiles.forEach((file, index) => {
+                    const fileName = file.split('/').pop();
+                    const option = new Option(fileName.replace(".swf", ""), index);
+                fileSelect.appendChild(option);
+                });
+
+                const loadButton = document.getElementById("loadButton");
+                loadButton.addEventListener("click", () => {
+                    const selectedFileIndex = fileSelect.value;
+                    const selectedFile = swfFiles[selectedFileIndex];
+                    if (selectedFile.includes("拯救地球")) {
+                        const resolution = document.querySelector(".ruffle-player-location");
+                        resolution.style.width = "calc(768px * 1.2)";
+                        resolution.style.height = "calc(432px * 1.2)";
+                    } else {
+                        const resolution = document.querySelector(".ruffle-player-location");
+                        resolution.style.width = "calc(640px * 1.2)";
+                        resolution.style.height = "calc(480px * 1.2)";
+                    }
+                    player.load(selectedFile).then(() => {
+                        console.info("Ruffle successfully loaded the file");
+                    }).catch((e) => {
+                        console.error(`Ruffle failed to load the file: ${e}`);
+                    });
+                });
+            });
+
+            window.RufflePlayer.config = {
+                "allowScriptAccess": true,
+                "autoplay": "auto",
+                "showSwfDownload": true,
+                "upgradeToHttps": window.location.protocol === "https:",
+                "scale": "showAll",
+                "quality": "low",
+                "openUrlMode": "confirm",
+                "allowNetworking": "all",
+                "showSwfDownload": true,
+            };
+        </script>
+        <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     </body>
 </html>
