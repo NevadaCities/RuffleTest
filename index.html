@@ -84,15 +84,21 @@
                 loadButton.addEventListener("click", () => {
                     const selectedFileIndex = fileSelect.value;
                     const selectedFile = swfFiles[selectedFileIndex];
+
                     if (selectedFile.includes("拯救地球")) {
                         const resolution = document.querySelector(".ruffle-player-location");
                         resolution.style.width = "calc(768px * 1.2)";
                         resolution.style.height = "calc(432px * 1.2)";
+                    } else if (selectedFile.includes("勇闯僵尸洞穴") || selectedFile.includes("勇闯僵尸洞穴2")) {
+                        const resolution = document.querySelector(".ruffle-player-location");
+                        resolution.style.width = "640px";
+                        resolution.style.height = "480px";
                     } else {
                         const resolution = document.querySelector(".ruffle-player-location");
                         resolution.style.width = "calc(640px * 1.2)";
                         resolution.style.height = "calc(480px * 1.2)";
                     }
+
                     player.load(selectedFile).then(() => {
                         console.info("Ruffle successfully loaded the file");
                     }).catch((e) => {
