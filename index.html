@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Flash小游戏</title>
+        <link rel="icon" href="res/favicon.png" sizes="64x64">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Flash小游戏">
+        <style>
+            body {
+                position: relative;
+                width: 100%;
+                height: 100vh;
+                margin: 0;
+            }
+            .inside {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 400px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .external {
+                display: flex;
+            }
+            .external > * {
+                margin: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="inside">
+            <p style="font-size:2em;margin:0;">Flash小游戏</p>
+            <div class="external">
+            <a href="res/html/EarthTaken.html">拯救地球系列</a>
+            <a href="res/html/Rebuild.html">重建城镇系列</a>
+            <a href="res/html/Zombotron.html">勇闯僵尸洞穴系列</a>
+            <a href="res/html/Other.html">其他游戏</a>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>其他游戏</title>
+        <link rel="icon" href="res/favicon.png" sizes="64x64">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="其他游戏">
+        <style type="text/css">
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 100vh;
+                margin: 1em;
+                overflow: hidden;
+            }
+            .nav {
+                height: 25px;
+            }
+            .player {
+                position: relative;
+                width: 100%;
+                height: calc(100vh - 25px - 2em);
+            }
+            ruffle-player {
+                position: absolute;
+                width: calc(640px * 1.2);
+                height: calc(480px * 1.2);
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
+        <script>
+            const userAgent = window.navigator.userAgent;
+            const allowedKeywords = ["Windows NT", "Macintosh", "X11", "Wayland"];
+            const isAllowedAccess = allowedKeywords.some(keyword => userAgent.includes(keyword));
+            if (!isAllowedAccess) {
+                alert("抱歉，您的设备可能无法提供最佳的游戏体验。");
+            }
+        </script>
+    </head>
+    <body>
+        <div class="nav">
+            <label for="fileSelect">选择游戏:</label>
+            <select id="fileSelect"></select>
+            <button id="loadButton">加载游戏</button>
+        </div>
+        <div class="player" id="player"></div>
+        <script>
+            window.RufflePlayer = window.RufflePlayer || {};
+            window.addEventListener("load", (event) => {
+                const ruffle = window.RufflePlayer.newest();
+                const player = ruffle.createPlayer();
+                const container = document.getElementById("player");
+                container.appendChild(player);
+
+                const swfFiles = [
+                    "res/swf/独自一人：僵尸丛林.swf",
+                    "res/swf/僵尸城突围.swf"
+                ];
+
+                const fileSelect = document.getElementById("fileSelect");
+                swfFiles.forEach((file, index) => {
+                    const fileName = file.split('/').pop();
+                    const option = new Option(fileName.replace(".swf", ""), index);
+                fileSelect.appendChild(option);
+                });
+
+                const loadButton = document.getElementById("loadButton");
+                loadButton.addEventListener("click", () => {
+                    const selectedFileIndex = fileSelect.value;
+                    const selectedFile = swfFiles[selectedFileIndex];
+                    player.load(selectedFile).then(() => {
+                        console.info("Ruffle successfully loaded the file");
+                    }).catch((e) => {
+                        console.error(`Ruffle failed to load the file: ${e}`);
+                    });
+                });
+            });
+
+            window.RufflePlayer.config = {
+                "allowScriptAccess": true,
+                "autoplay": "auto",
+                "showSwfDownload": true,
+                "upgradeToHttps": window.location.protocol === "https:",
+                "scale": "showAll",
+                "quality": "low",
+                "openUrlMode": "confirm",
+                "allowNetworking": "all",
+                "showSwfDownload": true,
+            };
+        </script>
+        <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    </body>
+</html>
